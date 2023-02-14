@@ -25,7 +25,9 @@
 #ifndef LIVOX_THREAD_BASE_H_
 #define LIVOX_THREAD_BASE_H_
 #include <atomic>
+#include <memory>
 #include <thread>
+
 #include "noncopyable.h"
 
 namespace livox {
@@ -45,7 +47,7 @@ class ThreadBase : public noncopyable {
  protected:
   std::shared_ptr<std::thread> thread_;
   std::atomic_bool quit_;
-  
+
  private:
   std::atomic_bool is_thread_valid_;
 };
