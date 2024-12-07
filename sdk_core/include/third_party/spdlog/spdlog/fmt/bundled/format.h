@@ -400,16 +400,22 @@ void basic_buffer<T>::append(const U *begin, const U *end) {
 }
 }  // namespace internal
 
+// C++20 feature test, since r346892 Clang considers char8_t a fundamental
+// type in this mode. If this is the case __cpp_char8_t will be defined.
+#if !defined(__cpp_char8_t)
+// A UTF-8 code unit type.
+enum char8_t_custom: unsigned char {};
+#endif
 
 // A UTF-8 string view.
-class u8string_view : public basic_string_view<char8_t> {
+class u8string_view : public basic_string_view<char8_t_custom> {
  public:
-  typedef char8_t char_type;
+  typedef char8_t_custom char_type;
 
   u8string_view(const char *s):
-    basic_string_view<char8_t>(reinterpret_cast<const char8_t*>(s)) {}
+    basic_string_view<char8_t_custom>(reinterpret_cast<const char8_t_custom*>(s)) {}
   u8string_view(const char *s, size_t count) FMT_NOEXCEPT:
-    basic_string_view<char8_t>(reinterpret_cast<const char8_t*>(s), count) {}
+    basic_string_view<char8_t_custom>(reinterpret_cast<const char8_t_custom*>(s), count) {}
 };
 
 #if FMT_USE_USER_DEFINED_LITERALS
@@ -788,15 +794,15 @@ template <typename Char>
 inline size_t count_code_points(basic_string_view<Char> s) { return s.size(); }
 
 // Counts the number of code points in a UTF-8 string.
-FMT_API size_t count_code_points(basic_string_view<char8_t> s);
+FMT_API size_t count_code_points(basic_string_view<char8_t_custom> s);
 
-inline char8_t to_char8_t(char c) { return static_cast<char8_t>(c); }
+inline char8_t_custom to_char8_t(char c) { return static_cast<char8_t_custom>(c); }
 
 template <typename InputIt, typename OutChar>
 struct needs_conversion: std::integral_constant<bool,
   std::is_same<
     typename std::iterator_traits<InputIt>::value_type, char>::value &&
-  std::is_same<OutChar, char8_t>::value> {};
+  std::is_same<OutChar, char8_t_custom>::value> {};
 
 template <typename OutChar, typename InputIt, typename OutputIt>
 typename std::enable_if<
