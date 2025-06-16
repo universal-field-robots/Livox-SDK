@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 
 set(DEMO_NAME lidar_lvx_sample)
 add_executable(${DEMO_NAME} main.cpp lvx_file.cpp)

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 
 set(DEMO_NAME lidar_sample_cc)
 add_executable(${DEMO_NAME} main.cpp lds_lidar.cpp)
